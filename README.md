@@ -1,8 +1,6 @@
 
 
 ```python
-# primero declaramos el grafo
-
 graph = {'S': set(['B', 'C', 'D']),
          'B': set(['S', 'E', 'F']),
          'C': set(['S', 'M', 'H']),
@@ -40,35 +38,37 @@ graph
 
 
 ```python
-# aplicamos la funcion para recorrer el arbol DFS
-def dfs(graph, start, visitado=None):
-    if visitado is None:
-        visitado = set()
-    visitado.add(start)
-    for next in graph[start] - visitado:
-        dfs(graph, next, visitado)
-    print('nodo visitado:', visitado)    
-    return visitado
+def dfs(graph, start):
+    visited, stack = set(), [start]
+    while stack:
+        vertex = stack.pop()
+        if vertex not in visited:
+            visited.add(vertex)
+            stack.extend(graph[vertex] - visited)
+    return visited
 
-# se van a imprimir los nodos visitados
+dfs(graph, 'S')
+```
+
+
+
+
+    {'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'S'}
+
+
+
+
+```python
+def dfs(graph, start, visited=None):
+    if visited is None:
+        visited = set()
+    visited.add(start)
+    for next in graph[start] - visited:
+        dfs(graph, next, visited)
+    return visited
 
 dfs(graph, 'C')
 ```
-
-    nodo visitado: {'C', 'B', 'S', 'E'}
-    nodo visitado: {'C', 'B', 'E', 'F', 'S'}
-    nodo visitado: {'C', 'B', 'E', 'F', 'S'}
-    nodo visitado: {'C', 'B', 'E', 'F', 'D', 'I', 'S'}
-    nodo visitado: {'C', 'B', 'E', 'F', 'J', 'D', 'I', 'S'}
-    nodo visitado: {'C', 'B', 'E', 'F', 'J', 'D', 'I', 'S'}
-    nodo visitado: {'C', 'B', 'E', 'F', 'J', 'D', 'I', 'S'}
-    nodo visitado: {'C', 'B', 'E', 'F', 'J', 'G', 'D', 'H', 'I', 'S'}
-    nodo visitado: {'C', 'B', 'E', 'F', 'J', 'G', 'D', 'H', 'I', 'S'}
-    nodo visitado: {'C', 'B', 'E', 'F', 'J', 'M', 'G', 'L', 'D', 'H', 'I', 'S'}
-    nodo visitado: {'C', 'B', 'E', 'F', 'J', 'M', 'K', 'G', 'L', 'D', 'H', 'I', 'S'}
-    nodo visitado: {'C', 'B', 'E', 'F', 'J', 'M', 'K', 'G', 'L', 'D', 'H', 'I', 'S'}
-    nodo visitado: {'C', 'B', 'E', 'F', 'J', 'M', 'K', 'G', 'L', 'D', 'H', 'I', 'S'}
-
 
 
 
@@ -80,34 +80,17 @@ dfs(graph, 'C')
 
 ```python
 def dfs_paths(graph, start, goal):
-    pila = [(start, [start])]
-    while pila:
-        (vertex, path) = pila.pop()
+    stack = [(start, [start])]
+    while stack:
+        (vertex, path) = stack.pop()
         for next in graph[vertex] - set(path):
             if next == goal:
                 yield path + [next]
             else:
-                pila.append((next, path + [next]))
-                print('valor pila: ',pila )
+                stack.append((next, path + [next]))
 
-# Se van a imprimir los nodos que fueron visitados para llegar al objetivo  
-print('valores de los nodos visitados')
 list(dfs_paths(graph, 'S', 'G'))
 ```
-
-    valores de los nodos visitados
-    valor pila:  [('C', ['S', 'C'])]
-    valor pila:  [('C', ['S', 'C']), ('B', ['S', 'B'])]
-    valor pila:  [('C', ['S', 'C']), ('B', ['S', 'B']), ('D', ['S', 'D'])]
-    valor pila:  [('C', ['S', 'C']), ('B', ['S', 'B']), ('I', ['S', 'D', 'I'])]
-    valor pila:  [('C', ['S', 'C']), ('B', ['S', 'B']), ('I', ['S', 'D', 'I']), ('J', ['S', 'D', 'J'])]
-    valor pila:  [('C', ['S', 'C']), ('E', ['S', 'B', 'E'])]
-    valor pila:  [('C', ['S', 'C']), ('E', ['S', 'B', 'E']), ('F', ['S', 'B', 'F'])]
-    valor pila:  [('H', ['S', 'C', 'H'])]
-    valor pila:  [('H', ['S', 'C', 'H']), ('M', ['S', 'C', 'M'])]
-    valor pila:  [('H', ['S', 'C', 'H']), ('L', ['S', 'C', 'M', 'L'])]
-    valor pila:  [('H', ['S', 'C', 'H']), ('L', ['S', 'C', 'M', 'L']), ('K', ['S', 'C', 'M', 'K'])]
-
 
 
 
@@ -120,19 +103,6 @@ list(dfs_paths(graph, 'S', 'G'))
 ```python
 list(dfs_paths(graph, 'S', 'K'))
 ```
-
-    valor pila:  [('C', ['S', 'C'])]
-    valor pila:  [('C', ['S', 'C']), ('B', ['S', 'B'])]
-    valor pila:  [('C', ['S', 'C']), ('B', ['S', 'B']), ('D', ['S', 'D'])]
-    valor pila:  [('C', ['S', 'C']), ('B', ['S', 'B']), ('I', ['S', 'D', 'I'])]
-    valor pila:  [('C', ['S', 'C']), ('B', ['S', 'B']), ('I', ['S', 'D', 'I']), ('J', ['S', 'D', 'J'])]
-    valor pila:  [('C', ['S', 'C']), ('E', ['S', 'B', 'E'])]
-    valor pila:  [('C', ['S', 'C']), ('E', ['S', 'B', 'E']), ('F', ['S', 'B', 'F'])]
-    valor pila:  [('H', ['S', 'C', 'H'])]
-    valor pila:  [('H', ['S', 'C', 'H']), ('M', ['S', 'C', 'M'])]
-    valor pila:  [('H', ['S', 'C', 'H']), ('L', ['S', 'C', 'M', 'L'])]
-    valor pila:  [('G', ['S', 'C', 'H', 'G'])]
-
 
 
 
