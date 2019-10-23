@@ -1,11 +1,12 @@
 
-
-```python
 # Nombre: Cristhian Jumbo 
 # Grupo: GR1
 # Materia Inteligencia artificial
-# primero declaramos el grafo
+## Aplicar para el siguiente grafo DFS
 
+![image](https://user-images.githubusercontent.com/50051312/67419520-747ead00-f592-11e9-81df-ebad7eaa243b.png)
+
+```python
 # primero declaramos el grafo
 
 graph = {'S': set(['B', 'C', 'D']),
